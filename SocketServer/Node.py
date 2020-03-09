@@ -20,9 +20,14 @@ class ClientNode(Thread):
         self.connection = connection
 
     def run(self) -> None:
+        self.status = STATUS['online']
         while self.__running:
-            data = self.connection.recv(2048)
-            print(data)
+            data = self.connection.recv(2048).decode("UTF8")
+            if len(data) and data[-1] == '\n':
+                self.on_msg_event(data[:-1])
+
+    def on_msg_event(self, data):
+        print(data)
 
     def set_status(self, int_code):
         if int_code in STATUS.items():

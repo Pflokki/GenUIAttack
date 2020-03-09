@@ -30,8 +30,8 @@ class Server(Thread):
             client_node.set_address((ip, port))
             client_node.set_status(0)
             self.client_pool.add(client_node)
-            self.window.update_connection(self.client_pool)
             client_node.start()
+            self.window.update_connection(self.client_pool)
 
     def stop_server(self):
         print("Server stopped")
