@@ -24,11 +24,14 @@ class ClientNode(Thread):
             data = self.connection.recv(2048)
             print(data)
 
-    def set_status(self, status, int_code=None):
-        if int_code and int_code in STATUS.items():
+    def set_status(self, int_code):
+        if int_code in STATUS.items():
             self.status = int_code
-        elif status in STATUS.keys():
-            self.status = STATUS[status]
 
     def set_address(self, address):
         self.address = address
+
+    def stop(self):
+        self.__running = False
+        self.status = STATUS['offline']
+        self.connection.close()

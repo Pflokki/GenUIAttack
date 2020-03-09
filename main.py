@@ -11,6 +11,7 @@ def main():
     tcp_server.start()
     window.show()
     app.exec_()
+    tcp_server.stop_server()
 
 
 if __name__ == '__main__':

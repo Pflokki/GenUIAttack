@@ -2,7 +2,7 @@ from threading import Thread
 import socket
 
 from SocketServer.NodePool import ClientNodePool
-from SocketServer.Node import ClientNode
+from SocketServer.Node import ClientNode, STATUS
 
 
 TCP_IP = '127.0.0.1'
@@ -14,6 +14,7 @@ class Server(Thread):
         super().__init__()
         self.client_pool = ClientNodePool()
         self.window = window
+        self._stop_flag = True
 
     def run(self) -> None:
         tcp_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,11 +23,17 @@ class Server(Thread):
 
         tcp_server.listen(5)
         print("Start listening")
-        while True:
+        while self._stop_flag:
             (connection, (ip, port)) = tcp_server.accept()
             print("New Connection from {}:{}".format(ip, port))
             client_node = ClientNode(connection)
             client_node.set_address((ip, port))
+            client_node.set_status(0)
             self.client_pool.add(client_node)
             self.window.update_connection(self.client_pool)
             client_node.start()
+
+    def stop_server(self):
+        print("Server stopped")
+        self._stop_flag = False
+        self.client_pool.close_connections()
