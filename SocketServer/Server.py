@@ -31,7 +31,14 @@ class Server(Thread):
             client_node.set_status(0)
             self.client_pool.add(client_node)
             client_node.start()
+            self.window.set_btn_callback(self.start_attack, self.stop_attack)
             self.window.update_connection(self.client_pool)
+
+    def start_attack(self):
+        print("[Server] Start attack")
+
+    def stop_attack(self):
+        print("[Server] Stop attack")
 
     def stop_server(self):
         print("Server stopped")
