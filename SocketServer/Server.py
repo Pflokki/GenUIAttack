@@ -36,11 +36,16 @@ class Server(Thread):
 
     def start_attack(self):
         print("[Server] Start attack")
+        self.client_pool.start_attack()
+        self.window.update_connection(self.client_pool)
 
     def stop_attack(self):
         print("[Server] Stop attack")
+        self.client_pool.stop_attack()
+        self.window.update_connection(self.client_pool)
 
     def stop_server(self):
         print("Server stopped")
         self._stop_flag = False
         self.client_pool.close_connections()
+

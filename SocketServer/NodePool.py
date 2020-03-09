@@ -22,3 +22,11 @@ class ClientNodePool:
         for node in self.client_nodes:
             node.stop()
         self.client_nodes.clear()
+
+    def start_attack(self):
+        for node in self.client_nodes:
+            node.start_attack()
+
+    def stop_attack(self):
+        for node in self.client_nodes:
+            node.stop_attack()

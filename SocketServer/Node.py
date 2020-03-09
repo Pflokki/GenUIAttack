@@ -27,7 +27,7 @@ class ClientNode(Thread):
                 self.on_msg_event(data[:-1])
 
     def on_msg_event(self, data):
-        print(data)
+        print("i: {}".format(data))
 
     def set_status(self, int_code):
         if int_code in STATUS.items():
@@ -40,3 +40,15 @@ class ClientNode(Thread):
         self.__running = False
         self.status = STATUS['offline']
         self.connection.close()
+
+    def start_attack(self):
+        self.send_message("Start attack")
+        self.status = STATUS['attacked']
+
+    def stop_attack(self):
+        self.send_message("Stop attack")
+        self.status = STATUS['online']
+
+    def send_message(self, message):
+        print("o: {}".format(message))
+        self.connection.send("{}\n".format(message).encode())
