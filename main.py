@@ -12,6 +12,7 @@ def main():
     window.show()
     app.exec_()
     tcp_server.stop_server()
+    tcp_server.join()
 
 
 if __name__ == '__main__':

@@ -3,25 +3,41 @@ import json
 
 class Message:
     def __init__(self):
-        self.msg = {'t': "Ping"}
+        self.tag = "Ping"
 
     def get_message(self):
-        return json.dumps(self.msg).encode()
+        return json.dumps({'t': self.tag}).encode()
+
+    def decode(self, msg):
+        if 't' in msg:
+            if msg['t'] == self.tag:
+                return self
+        else:
+            raise TypeError
 
 
 class StartAttackMessage(Message):
     def __init__(self):
         super().__init__()
-        self.msg = {'t': "StartAttack"}
+        self.tag = "StartAttack"
+
+    def get_message(self):
+        return json.dumps({'t': self.tag}).encode()
 
 
 class StopAttackMessage(Message):
     def __init__(self):
         super().__init__()
-        self.msg = {'t': "StopAttack"}
+        self.tag = "StopAttack"
+
+    def get_message(self):
+        return json.dumps({'t': self.tag}).encode()
 
 
 class GetStatus(Message):
     def __init__(self):
         super().__init__()
-        self.msg = {'t': "GetStatus"}
+        self.tag = "GetStatus"
+
+    def get_message(self):
+        return json.dumps({'t': self.tag}).encode()
