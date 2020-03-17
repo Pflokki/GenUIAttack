@@ -1,6 +1,7 @@
 from threading import Thread
 from Messages import StartAttackMessage, StopAttackMessage, ClientStatus, GetStatus
 import json
+from InfoWindowControl import InfoWindowControl
 
 STATUS = ['offline', 'online', 'attacked', 'down']
 
@@ -11,6 +12,8 @@ class ClientNode(Thread):
 
         self.address = None
         self.status = STATUS[0]
+        self.client_status = ClientStatus()
+        self.info_window = InfoWindowControl()
 
         self.__running = True
         self.connection = connection
@@ -26,7 +29,12 @@ class ClientNode(Thread):
         print("i: {}".format(data))
         if 't' in data:
             if data['t'] == ClientStatus.tag:
-                client_status = ClientStatus.decode(data)
+                self.client_status = ClientStatus.decode(data)
+                self.info_window.set_info(self.client_status.CPU,
+                                          self.client_status.RAM,
+                                          self.client_status.Connects,
+                                          self.client_status.Traffic)
+                self.info_window.show()
 
     def set_status(self, int_code):
         if 0 <= int_code <= len(STATUS):
