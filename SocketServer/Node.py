@@ -18,7 +18,7 @@ class ClientNode(Thread):
     def run(self) -> None:
         self.status = STATUS[1]
         while self.__running:
-            data = self.connection.recv(2048).decode("UTF8")
+            data = self.connection.recv(20480).decode("UTF8")
             if len(data):
                 self.on_msg_event(json.loads(data))
 
