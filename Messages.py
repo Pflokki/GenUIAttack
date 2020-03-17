@@ -21,23 +21,14 @@ class StartAttackMessage(Message):
         super().__init__()
         self.tag = "StartAttack"
 
-    def get_message(self):
-        return json.dumps({'t': self.tag}).encode()
-
 
 class StopAttackMessage(Message):
     def __init__(self):
         super().__init__()
         self.tag = "StopAttack"
 
-    def get_message(self):
-        return json.dumps({'t': self.tag}).encode()
-
 
 class GetStatus(Message):
     def __init__(self):
         super().__init__()
         self.tag = "GetStatus"
-
-    def get_message(self):
-        return json.dumps({'t': self.tag}).encode()

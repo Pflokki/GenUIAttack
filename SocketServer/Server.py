@@ -2,7 +2,7 @@ from threading import Thread
 import socket
 
 from SocketServer.NodePool import ClientNodePool
-from SocketServer.Node import ClientNode, STATUS
+from SocketServer.Node import ClientNode
 
 
 TCP_IP = '127.0.0.1'
