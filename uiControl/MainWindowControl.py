@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QHeaderView
+from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QHeaderView, QAbstractItemView
 from PyQt5.uic import loadUi
 
 
@@ -10,9 +10,13 @@ class MainWindowControl(QMainWindow):
 
         self.attack_btn_callback = None
         self.stop_attack_btn_callback = None
+        self.client_status_callback = None
 
         self.pB_StartAttack.clicked.connect(self.on_click_attack_btn)
         self.pB_StopAttack.clicked.connect(self.on_click_stop_attack_btn)
+
+        self.tW_NodeStatus.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.tW_NodeStatus.itemClicked.connect(self.on_click_client_row)
 
     def init_table_widget(self):
         self.tW_NodeStatus.setRowCount(0)
@@ -43,6 +47,11 @@ class MainWindowControl(QMainWindow):
         if self.stop_attack_btn_callback is not None:
             self.stop_attack_btn_callback()
 
-    def set_btn_callback(self, attack_btn_callback, stop_attack_btn_callback):
+    def on_click_client_row(self):
+        client_row = self.tW_NodeStatus.selectionModel().selectedRows()[0]
+        self.client_status_callback(client_row.row())
+
+    def set_btn_callback(self, attack_btn_callback, stop_attack_btn_callback, client_status_callback):
         self.attack_btn_callback = attack_btn_callback
         self.stop_attack_btn_callback = stop_attack_btn_callback
+        self.client_status_callback = client_status_callback

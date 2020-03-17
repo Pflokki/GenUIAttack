@@ -25,3 +25,7 @@ class ClientNodePool:
                 node.stop_attack()
             except (BrokenPipeError, OSError):
                 node.stop()
+
+    def get_client_status(self, client_row):
+        if 0 <= client_row <= len(self.client_nodes):
+            self.client_nodes[client_row].get_node_info()

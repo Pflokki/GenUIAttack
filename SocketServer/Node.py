@@ -1,5 +1,6 @@
 from threading import Thread
-from Messages import StartAttackMessage, StopAttackMessage
+from Messages import StartAttackMessage, StopAttackMessage, ClientStatus, GetStatus
+import json
 
 STATUS = ['offline', 'online', 'attacked', 'down']
 
@@ -18,11 +19,14 @@ class ClientNode(Thread):
         self.status = STATUS[1]
         while self.__running:
             data = self.connection.recv(2048).decode("UTF8")
-            if len(data) and data[-1] == '\n':
-                self.on_msg_event(data[:-1])
+            if len(data):
+                self.on_msg_event(json.loads(data))
 
     def on_msg_event(self, data):
         print("i: {}".format(data))
+        if 't' in data:
+            if data['t'] == ClientStatus.tag:
+                client_status = ClientStatus.decode(data)
 
     def set_status(self, int_code):
         if 0 <= int_code <= len(STATUS):
@@ -43,6 +47,10 @@ class ClientNode(Thread):
     def stop_attack(self):
         self.send_message(StopAttackMessage().get_message())
         self.status = STATUS[1]
+
+    def get_node_info(self):
+        print("[{}] ask info".format(self.address))
+        self.send_message(GetStatus().get_message())
 
     def send_message(self, message):
         print("o: {}".format(message))
