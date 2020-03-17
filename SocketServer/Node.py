@@ -1,5 +1,5 @@
 from threading import Thread
-
+from Messages import StartAttackMessage, StopAttackMessage
 
 STATUS = {
     'offline': -1,
@@ -42,13 +42,13 @@ class ClientNode(Thread):
         self.connection.close()
 
     def start_attack(self):
-        self.send_message("Start attack")
+        self.send_message(StartAttackMessage().get_message())
         self.status = STATUS['attacked']
 
     def stop_attack(self):
-        self.send_message("Stop attack")
+        self.send_message(StopAttackMessage().get_message())
         self.status = STATUS['online']
 
     def send_message(self, message):
         print("o: {}".format(message))
-        self.connection.send("{}\n".format(message).encode())
+        self.connection.send(message)
