@@ -20,6 +20,8 @@ class InfoWindowControl(QMainWindow):
         self.connect = connect
         self.traffic = traffic
 
+        self.plotting_pictures()
+
     def init_plot(self):
         self.MplWidget_CPU.canvas.axes.set_title('Нагрузка ЦП, %')
         self.MplWidget_CPU.canvas.axes.set_xlabel('Время, с')
@@ -45,6 +47,8 @@ class InfoWindowControl(QMainWindow):
         self.MplWidget_RAM.canvas.axes.clear()
         self.MplWidget_Connects.canvas.axes.clear()
         self.MplWidget_Traffic.canvas.axes.clear()
+
+        self.init_plot()
 
         self.MplWidget_CPU.canvas.axes.plot(self.cpu)
         self.MplWidget_RAM.canvas.axes.plot(self.ram)
