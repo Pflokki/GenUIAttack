@@ -1,7 +1,7 @@
 from threading import Thread
 from Messages import StartAttackMessage, StopAttackMessage, ClientStatus, GetStatus
 import json
-from InfoWindowControl import InfoWindowControl
+from uiControl.InfoWindowControl import InfoWindowControl
 
 STATUS = ['offline', 'online', 'attacked', 'down']
 
@@ -34,6 +34,8 @@ class ClientNode(Thread):
                                           self.client_status.RAM,
                                           self.client_status.Connects,
                                           self.client_status.Traffic)
+                self.info_window.init_plot()
+                self.info_window.plotting_pictures()
                 self.info_window.show()
 
     def set_status(self, int_code):
