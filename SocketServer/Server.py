@@ -14,7 +14,10 @@ class Server(Thread):
         super().__init__()
         self.client_pool = ClientNodePool()
         self.window = window
+        self.window.set_pool(self.client_pool)
         self._stop_flag = True
+
+        self.update_timer = None
 
     def run(self) -> None:
         tcp_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -32,17 +35,17 @@ class Server(Thread):
             self.client_pool.add(client_node)
             client_node.start()
             self.window.set_btn_callback(self.start_attack, self.stop_attack, self.get_client_status)
-            self.window.update_connection(self.client_pool)
+            self.window.update_connection()
 
     def start_attack(self):
         print("[Server] Start attack")
         self.client_pool.start_attack()
-        self.window.update_connection(self.client_pool)
+        self.window.update_connection()
 
     def stop_attack(self):
         print("[Server] Stop attack")
         self.client_pool.stop_attack()
-        self.window.update_connection(self.client_pool)
+        self.window.update_connection()
 
     def get_client_status(self, client_row):
         print("[Server] Get client status")
@@ -52,4 +55,3 @@ class Server(Thread):
         print("Server stopped")
         self._stop_flag = False
         self.client_pool.close_connections()
-

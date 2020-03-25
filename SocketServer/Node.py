@@ -1,7 +1,8 @@
-from threading import Thread
-from Messages import StartAttackMessage, StopAttackMessage, ClientStatus, GetStatus
+from threading import Thread, Timer
+from Messages import StartAttackMessage, StopAttackMessage, ClientStatus, GetStatus, DieMessage
 import json
 from uiControl.InfoWindowControl import InfoWindowControl
+import random
 
 STATUS = ['offline', 'online', 'attacked', 'down']
 
@@ -17,6 +18,8 @@ class ClientNode(Thread):
 
         self.__running = True
         self.connection = connection
+
+        self.die_timer = None
 
     def run(self) -> None:
         self.status = STATUS[1]
@@ -49,12 +52,21 @@ class ClientNode(Thread):
         self.connection.close()
 
     def start_attack(self):
-        self.send_message(StartAttackMessage().get_message())
-        self.status = STATUS[2]
+        if self.status not in [STATUS[0], STATUS[3]]:
+            self.send_message(StartAttackMessage().get_message())
+            self.status = STATUS[2]
+            self.die_timer = Timer(random.uniform(50, 120), self.die_message)
+            self.die_timer.start()
 
     def stop_attack(self):
-        self.send_message(StopAttackMessage().get_message())
-        self.status = STATUS[1]
+        if self.status not in [STATUS[0], STATUS[3]]:
+            self.send_message(StopAttackMessage().get_message())
+            self.status = STATUS[1]
+            self.die_timer.cancel()
+
+    def die_message(self):
+        self.send_message(DieMessage().get_message())
+        self.status = STATUS[3]
 
     def get_node_info(self):
         print("[{}] ask info".format(self.address))

@@ -18,6 +18,8 @@ class MainWindowControl(QMainWindow):
         self.tW_NodeStatus.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.tW_NodeStatus.itemClicked.connect(self.on_click_client_row)
 
+        self.node_pool = None
+
     def init_table_widget(self):
         self.tW_NodeStatus.setRowCount(0)
         self.tW_NodeStatus.setColumnCount(2)
@@ -30,9 +32,12 @@ class MainWindowControl(QMainWindow):
             self.tW_NodeStatus.setHorizontalHeaderItem(index, QTableWidgetItem(name))
         self.tW_NodeStatus.insertRow(0)
 
-    def update_connection(self, node_pool):
+    def set_pool(self, node_pool):
+        self.node_pool = node_pool
+
+    def update_connection(self):
         self.init_table_widget()
-        for row_count, node in enumerate(node_pool.client_nodes):
+        for row_count, node in enumerate(self.node_pool.client_nodes):
             self.tW_NodeStatus.insertRow(row_count)
             self.tW_NodeStatus.setItem(row_count, 0, QTableWidgetItem(str(node.address)))
             self.tW_NodeStatus.setItem(row_count, 1, QTableWidgetItem(str(node.status)))
@@ -41,11 +46,14 @@ class MainWindowControl(QMainWindow):
         print("[Window] Start attack")
         if self.attack_btn_callback is not None:
             self.attack_btn_callback()
+        self.update_connection()
 
     def on_click_stop_attack_btn(self):
         print("[Window] Stop attack")
         if self.stop_attack_btn_callback is not None:
             self.stop_attack_btn_callback()
+
+        self.update_connection()
 
     def on_click_client_row(self):
         client_row = self.tW_NodeStatus.selectionModel().selectedRows()[0]
